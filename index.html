@@ -1,0 +1,52 @@
+<!-- CONTENEUR LECTEUR -->
+<div id="g-audio-wrap" style="display:inline-flex; flex-direction:column; gap:8px; align-items:center; padding:8px 12px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.12); background: rgba(255,255,255,0.9); font-family: Arial, sans-serif;">
+  <!-- icônes -->
+  <div style="display:flex; gap:12px; align-items:center;">
+    <button id="g-play" aria-label="Play" title="Lecture" style="font-size:20px; padding:6px 8px; border-radius:8px; border:none; cursor:pointer;">▶️</button>
+    <button id="g-pause" aria-label="Pause" title="Pause" style="font-size:20px; padding:6px 8px; border-radius:8px; border:none; cursor:pointer;">⏸️</button>
+    <button id="g-mute" aria-label="Mute" title="Couper/Micro" style="font-size:18px; padding:6px 8px; border-radius:8px; border:none; cursor:pointer;">🔇</button>
+  </div>
+
+  <!-- slider volume -->
+  <div style="display:flex; gap:8px; align-items:center; width:100%;">
+    <label for="g-vol" style="font-size:12px;">Vol</label>
+    <input id="g-vol" type="range" min="0" max="1" step="0.01" value="0.8" style="flex:1;">
+    <span id="g-vol-percent" style="min-width:36px; text-align:right; font-size:12px;">80%</span>
+  </div>
+</div>
+
+<!-- LECTEUR AUDIO -->
+<audio id="g-audio" src="https://www.auboutdufil.com/get.php?fla=https://archive.org/download/tokyo-music-walker-moonbeams/TokyoMusicWalker-Moonbeams.mp3" preload="auto" loop autoplay></audio>
+
+<script>
+(function(){
+  const audio = document.getElementById('g-audio');
+  const play = document.getElementById('g-play');
+  const pause = document.getElementById('g-pause');
+  const mute = document.getElementById('g-mute');
+  const vol = document.getElementById('g-vol');
+  const volPercent = document.getElementById('g-vol-percent');
+
+  audio.volume = parseFloat(vol.value);
+  volPercent.textContent = Math.round(audio.volume * 100) + '%';
+
+  play.addEventListener('click', () => audio.play().catch(()=>{}));
+  pause.addEventListener('click', () => audio.pause());
+
+  mute.addEventListener('click', () => {
+    audio.muted = !audio.muted;
+    mute.textContent = audio.muted ? '🔇' : '🔊';
+  });
+
+  vol.addEventListener('input', () => {
+    audio.volume = parseFloat(vol.value);
+    volPercent.textContent = Math.round(audio.volume * 100) + '%';
+    audio.muted = audio.volume === 0;
+    mute.textContent = audio.muted ? '🔇' : '🔊';
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    audio.play().catch(()=>{});
+  });
+})();
+</script>
